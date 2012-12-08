@@ -229,6 +229,7 @@ numB 125 = ss :$ (S :$ (K :$ ss) :$ ss) :$ numB 3
 numB 126 = ss :$ numB 125
 numB 127 = ss :$ numB 126
 numB 128 = S :$ numB 7 :$ numB 2
+numB 256 = ssi :$ numB 4
 
 len :: Expr -> Int
 len (x :$ y) = len x + len y
