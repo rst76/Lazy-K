@@ -35,9 +35,9 @@ nb n = minimumBy (compare `on` (\(e, s) -> (len e, length $ showG e))) $
   [(S :$ (ss :$ (ss :$ ssiss)) :$ (bs!!3), "S :$ (ss :$ (ss :$ ssiss)) :$ numB 4") | n == 84] ++
   [(S :$ S :$ (bs!!(n-1)), "ss :$ numB " ++ show (n-1))] ++
   [(S :$ (S :$ (bs!!i) :$ S) :$ (bs!!j), "S :$ (S :$ numB " ++ show i ++ " :$ S) :$ numB " ++ show j) |
-		i <- [2..n-2], let j = n - i] ++
+    i <- [2..n-2], let j = n - i] ++
   [(S :$ (S :$ I :$ (bs!!i)) :$ (bs!!j), "S :$ (S :$ I :$ numB " ++ show i ++ ") :$ numB " ++ show j) |
-		i <- [2..div n 2], (j, 0) <- [divMod n i]] ++
+    i <- [2..div n 2], (j, 0) <- [divMod n i]] ++
   [(S :$ (bs!!j) :$ (bs!!i), "S :$ numB " ++ show j ++ " :$ numB " ++ show i) |
     i <- [2..floor(sqrt(toEnum n))], let j = round $ log (toEnum n) / log (toEnum i), i^j == n] ++
   [(S :$ (ss :$ ssiss) :$ (bs!!i), "S :$ (ss :$ ssiss) :$ numB " ++ show i) |
