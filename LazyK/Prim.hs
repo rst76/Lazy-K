@@ -271,7 +271,7 @@ reduce (x :$ y) = apply (reduce x) (reduce y)
 reduce x = x
 
 run :: Expr -> IO ()
-run expr = case apply (apply (apply expr car) Succ) (Num 0) of
+run expr = case apply (apply (apply expr true) Succ) (Num 0) of
   Num 256 -> return ()
-  Num i -> putChar (toEnum i) >> run (apply expr cdr)
+  Num i -> putChar (toEnum i) >> run (apply expr false)
   x -> error ("Output should be the list of Church numerals: " ++ showC x)
