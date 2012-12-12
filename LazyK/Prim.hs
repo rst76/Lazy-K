@@ -71,19 +71,20 @@ cons = S :$ (S :$ (K :$ S) :$ (S :$ (K :$ K) :$ (S :$ (K :$ S) :$ (S :$ (K :$ si
 
 nil = K :$ true
 isNil = K :$ (K :$ false)
-car = true
-cdr = false
 carX x = x :$ true
 cdrX x = x :$ false
-nthXY x y = x :$ (si :$ (K :$ cdr)) :$ y :$ car
+car = si :$ (K :$ true)
+cdr = si :$ (K :$ false)
+nthNX n x = carX (n :$ cdr :$ x)
+listOf = m :$ (delete (V "f") $ delete (V "x") $ consXY (V "x") (V "f" :$ V "f" :$ V "x"))
 
 list :: [Expr] -> Expr
 list = foldr consXY nil
 
 suc = S :$ b
 
-ifnozeroXYZ x y z = x :$ (K :$ y) :$ z
-ifleq m n x y = (m :$ t :$ (K :$ x)) :$ (n :$ t :$ (K :$ y))
+ifnonzeroNXY n x y = n :$ (K :$ x) :$ y
+ifleMNXY m n x y = (m :$ t :$ (K :$ x)) :$ (n :$ t :$ (K :$ y))
 
 chr :: Char -> Expr
 chr = num . fromEnum
