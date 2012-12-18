@@ -82,6 +82,9 @@ list :: [Expr] -> Expr
 list = foldr consXY nil
 
 suc = S :$ b
+pre = delete (V "n") $ V "n" :$ f :$ (K :$ num 0) :$ I
+  where
+  f = delete (V "x") $ delete (V "y") $ V "y" :$ (V "x" :$ suc)
 
 ifnonzeroNXY n x y = n :$ (K :$ x) :$ y
 ifleMNXY m n x y = (m :$ t :$ (K :$ x)) :$ (n :$ t :$ (K :$ y))

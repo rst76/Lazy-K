@@ -81,6 +81,31 @@ hello = (foldl (\e c -> e :$ (nn (fromEnum c))) (m :$ hh :$ K) "!dlrow ,olleH\0"
   nn 114 = K :$ (S :$ (S :$ numB 6 :$ S))
   nn 119 = K :$ (S :$ (S :$ numB 11 :$ S))
 
+fizzBuzz = K :$ (m :$ fb :$ num 1)
+fb = delete (V "f") $ delete (V "x") $
+  ifleMNXY (V "x") (num 100)
+    ((delete (V "y") $ V "y" :$ nil :$ isNil :$ (show10 :$ V "x") :$ V "y") :$
+      fizzbuzz (V "x") :$ consXY (num 10) (m :$ V "f" :$ (suc :$ V "x")))
+    K
+  where
+  fizzbuzz n = S :$ (S :$ (K :$ b) :$ nthNX n (m :$ fizz)) :$ nthNX n (m :$ buzz) :$
+    (num 2 :$ consX (num 122))
+  fizz = delete (V "f") $
+    consXY
+      (S :$ (K :$ (S :$ (K :$ consX (num 70)) :$ consX (num 105))))
+      (num 2 :$ consX false :$ (m :$ V "f"))
+  buzz = delete (V "f") $
+    consXY
+      (S :$ (K :$ (S :$ (K :$ consX (num 66)) :$ consX (num 117))))
+      (num 4 :$ consX false :$ (m :$ V "f"))
+  show10 = m :$ dec :$ num 0
+  dec = delete (V "f") $ delete (V "x") $ delete (V "y") $
+    ifleMNXY (num 10) (V "y")
+      (m :$ V "f" :$ (suc :$ V "x") :$ (num 10 :$ pre :$ V "y"))
+      (b :$
+        (ifnonzeroNXY (V "x") (m :$ V "f" :$ num 0 :$ V "x") I) :$
+        (consX (S :$ numB 48 :$ S :$ b :$ V "y")))
+
 -- Quine
 -- code representation : list of modified Church numerals
 -- code order : ascending
