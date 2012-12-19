@@ -5,8 +5,8 @@ import LazyK.Prim
 -- v
 v = K :$ (K :$ num 118)
 
--- "42"
-ultimateProblem = K :$ (delete (V "t") (V "t" :$ (S :$ numB 2 :$ S :$ b) :$ K :$ chr '2'))
+-- ultimate problem / "42"
+up = K :$ (delete (V "t") (V "t" :$ (S :$ numB 2 :$ S :$ b) :$ K :$ chr '2'))
 
 -- delete blank lines
 deleteBlankLines = m :$ dbl
@@ -32,9 +32,9 @@ evenLines = m :$ el :$ false
   neq10 a = nthNX (num 10) (a :$ consX true :$ S)
 
 -- sort characters
-sortCharacters = m :$ sort
+sort = m :$ s
   where
-  sort = delete (V "f") $ delete (V "x") $
+  s = delete (V "f") $ delete (V "x") $
     ifleMNXY (num 256) (carX (V "x"))
       (V "x")
       (m :$ ins :$ (m :$ V "f" :$ cdrX (V "x")) :$ (carX (V "x")))
@@ -53,17 +53,17 @@ hello0 = K :$ (foldr (consXY . num' . fromEnum) (K :$ num' 256) "Hello, world!")
 hello1 = K :$ (foldr (consXY . chr) endOfOutput "Hello, world!")
 
 -- hello world with recursion
-hello2 = K :$ (foldl (\e c -> e :$ (numB (fromEnum c))) (m :$ hh :$ endOfOutput) "!dlrow ,olleH\0")
+hello2 = K :$ (foldl (\e c -> e :$ (numB (fromEnum c))) (m :$ h :$ endOfOutput) "!dlrow ,olleH\0")
   where
-  hh = delete (V "f") $ delete (V "x") $ delete (V "y") $
+  h = delete (V "f") $ delete (V "x") $ delete (V "y") $
     ifnonzeroNXY (V "y" :$ b)
       (V "f" :$ V "f" :$ (consXY (V "y" :$ b) (V "x")))
       (V "x")
 
 -- hello world that N is defined as <27> + f <73> <81>
-hello = (foldl (\e c -> e :$ (nn (fromEnum c))) (m :$ hh :$ K) "!dlrow ,olleH\0")
+hello = (foldl (\e c -> e :$ (nn (fromEnum c))) (m :$ h :$ K) "!dlrow ,olleH\0")
   where
-  hh = delete (V "f") $ delete (V "x") $ delete (V "y") $
+  h = delete (V "f") $ delete (V "x") $ delete (V "y") $
     ifnonzeroNXY (V "y" :$ numB 1 :$ numB 1 :$ b)
       (V "f" :$ V "f" :$ (consXY
         (S :$ (S :$ numB 27 :$ S) :$ (V "y" :$ numB 73 :$ numB 81) :$ b)
@@ -81,13 +81,43 @@ hello = (foldl (\e c -> e :$ (nn (fromEnum c))) (m :$ hh :$ K) "!dlrow ,olleH\0"
   nn 114 = K :$ (S :$ (S :$ numB 6 :$ S))
   nn 119 = K :$ (S :$ (S :$ numB 11 :$ S))
 
-fizzBuzz = K :$ (m :$ fb :$ num 1)
-fb = delete (V "f") $ delete (V "x") $
-  ifleMNXY (V "x") (num 100)
-    ((delete (V "y") $ V "y" :$ nil :$ isNil :$ (show10 :$ V "x") :$ V "y") :$
-      fizzbuzz (V "x") :$ consXY (num 10) (m :$ V "f" :$ (suc :$ V "x")))
-    K
+-- permutater
+perm = S :$ (m :$ p :$ I :$ I) :$ K
   where
+  p = delete (V "f") $ delete (V "a") $ delete (V "b") $ delete (V "x") $
+    ifleMNXY (num 256) (carX (V "x"))
+      (ifnonzeroNXY (carX (V "b" :$ (K :$ num 0))) I (b :$ V "a" :$ consX (num 10)))
+      (b :$ 
+        (m :$ V "f" :$ (b :$ V "a" :$ consX (carX (V "x"))) :$ I :$ (V "b" :$ cdrX (V "x"))) :$
+        (m :$ V "f" :$ V "a" :$ (b :$ V "b" :$ consX (carX (V "x"))) :$ cdrX (V "x")))
+
+-- Fibonacci Numbers
+fib = K :$ (S :$ (m :$ f :$ num 0) :$ consX (num 1) :$ (m :$ zero))
+  where
+  f = delete (V "f") $ delete (V "n") $ delete (V "x") $ delete (V "y") $
+    ifleMNXY (num 46) (V "n") K
+      (m :$ shows :$ V "y" :$ consXY (num 10)
+        (m :$ V "f" :$ (suc :$ V "n") :$ V "y" :$ (m :$ add :$ V "x" :$ V "y" :$ num 0)))
+  shows = delete (V "f") $ delete (V "x") $
+    ifnonzeroNXY (carX (V "x") :$ suc :$ carX (cdrX (V "x")))
+      (b :$ (m :$ V "f" :$ cdrX (V "x")) :$ consX (S :$ numB 48 :$ S :$ b :$ carX (V "x"))) I
+  add = delete (V "f") $ delete (V "x") $ delete (V "y") $ delete (V "z") $
+    (delete (V "t") $ delete (V "s") $
+        (ifleMNXY (num 10) (V "s")
+          (consXY (num 10 :$ pre :$ V "s") (V "t" :$ num 1))
+          (consXY (V "s") (V "t" :$ num 0)))) :$
+      (m :$ V "f" :$ cdrX (V "x") :$ cdrX (V "y")) :$
+      (carX (V "x") :$ suc :$ carX (V "y") :$ suc :$ V "z")
+  zero = delete (V "f") $ consXY (num 0) (m :$ V "f")
+
+-- FizzBuzz
+fizzBuzz = K :$ (m :$ fb :$ num 1)
+  where
+  fb = delete (V "f") $ delete (V "x") $
+    ifleMNXY (V "x") (num 100)
+      ((delete (V "y") $ V "y" :$ nil :$ isNil :$ (show10 :$ V "x") :$ V "y") :$
+        fizzbuzz (V "x") :$ consXY (num 10) (m :$ V "f" :$ (suc :$ V "x")))
+      K
   fizzbuzz n = S :$ (S :$ (K :$ b) :$ nthNX n (m :$ fizz)) :$ nthNX n (m :$ buzz) :$
     (num 2 :$ consX (num 122))
   fizz = delete (V "f") $
