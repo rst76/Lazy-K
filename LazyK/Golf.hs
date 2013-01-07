@@ -1,5 +1,6 @@
 module Main where
 
+import Data.Char (toUpper)
 import LazyK.Prim
 
 -- v
@@ -141,9 +142,9 @@ fizzBuzz = K :$ (m :$ fb :$ num 1)
 -- code order : ascending
 -- termination judge : end of list
 quine0S =  showU $ quine0 $ list $ map qCode0 $ init $ showU $ quine0 I
-
-quine0 code = K :$ (m :$ funcExpr :$ (S :$ S :$ (m :$ codeExpr) :$ (m :$ (+++)) :$ code))
   where
+
+  quine0 code = K :$ (m :$ funcExpr :$ (S :$ S :$ (m :$ codeExpr) :$ (m :$ (+++)) :$ code))
 
   funcExpr = delete (V "f") $ delete (V "x") $
     (V "x" :$ isNil) :$
@@ -176,19 +177,21 @@ quine0 code = K :$ (m :$ funcExpr :$ (S :$ S :$ (m :$ codeExpr) :$ (m :$ (+++)) 
       (V "y") :$
       (consX (carX (V "x")) :$ (V "f" :$ V "f" :$ cdrX (V "x") :$ V "y"))
 
-qCode0 '`' = K
-qCode0 's' = I
-qCode0 'k' = S :$ S
-qCode0 'i' = S :$ (K :$ ss) :$ ss
+  qCode0 '`' = K
+  qCode0 's' = I
+  qCode0 'k' = S :$ S
+  qCode0 'i' = S :$ (K :$ ss) :$ ss
 
 -- Quine 
 -- code representation : 1 - 2 letters (s / ks / kk)
 -- code order : descending
 -- termination judge : length of '`' succession
-quineS = showU quine ++ concatMap qCode (reverse $ showU quine)
-
-quine = replace I (S :$ K :$ K) $ m :$ q :$ I :$ num 1
+quineS = qs ++ concatMap qCode (reverse qs)
   where
+  qCode '`' = "S"
+  qCode 'K' = "KK"
+  qCode 'S' = "KS"
+  qs = map toUpper $ showU $ replace I (S :$ K :$ K) $ m :$ q :$ I :$ num 1
   q = delete (V "f") $ delete (V "k") $ delete (V "n") $
     ifleMNXY (num 6) (V "n")
       -- for anarchy golf
@@ -200,16 +203,14 @@ quine = replace I (S :$ K :$ K) $ m :$ q :$ I :$ num 1
             ((delete (V "y") $ (b :$
                 (V "n" :$ (K :$ (V "x" :$ I :$ consX (chr '`'))) :$ V "y") :$
                 (b :$ V "k" :$ V "y"))) :$
-              (V "x" :$ consX (chr 'k') :$ consX (chr 's'))) :$
+              (V "x" :$ consX k :$ consX s)) :$
             (V "x" :$ (V "n" :$ num 0) :$ (suc :$ V "n"))) :$
         sk2bool)
+  k = ss :$ (ss :$ (ss :$ (ssss1 :$ (S :$ numB 3 :$ numB 2)))) :$ b
+  s = ss :$ (ss :$ (ss :$ (ss :$ ss) :$ numB 2)) :$ b
 
 -- (\x->SSSx(SKx)K)K = true, (\x->SSSx(SKx)K)S = false
 sk2bool = delete (V "x") $ S :$ S :$ S :$ V "x" :$ (S :$ K :$ V "x") :$ K
-
-qCode '`' = "s"
-qCode 'k' = "kk"
-qCode 's' = "ks"
 
 -- main = putStr $ showG hello
 main =  putStr quineS
