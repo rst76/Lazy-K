@@ -11,7 +11,7 @@ import LazyK.Prim
 
 nb 0 = (K :$ (S :$ K), "K :$ false")
 nb 1 = (S :$ K, "false")
-nb n = minimumBy (compare `on` (\(e, s) -> (len e, length $ showG e))) $
+nb n = minimumBy (compare `on` (\(e, s) -> (length $ showG e, len e))) $
   [(ssi :$ (bs!!2), "ssi :$ numB 2") | n == 4] ++
   [(ssi :$ (bs!!3), "ssi :$ numB 3") | n == 27] ++
   [(ssi :$ (bs!!4), "ssi :$ numB 4") | n == 256] ++
@@ -36,7 +36,7 @@ nb n = minimumBy (compare `on` (\(e, s) -> (len e, length $ showG e))) $
   [(S :$ S :$ (bs!!(n-1)), "ss :$ numB " ++ show (n-1))] ++
   [(S :$ (S :$ (bs!!i) :$ S) :$ (bs!!j), "S :$ (S :$ numB " ++ show i ++ " :$ S) :$ numB " ++ show j) |
     i <- [2..n-2], let j = n - i] ++
-  [(S :$ (S :$ I :$ (bs!!i)) :$ (bs!!j), "S :$ (S :$ I :$ numB " ++ show i ++ ") :$ numB " ++ show j) |
+  [(S :$ (S :$ I :$ (bs!!i)) :$ (bs!!j), "S :$ (si :$ numB " ++ show i ++ ") :$ numB " ++ show j) |
     i <- [2..div n 2], (j, 0) <- [divMod n i]] ++
   [(S :$ (bs!!j) :$ (bs!!i), "S :$ numB " ++ show j ++ " :$ numB " ++ show i) |
     i <- [2..floor(sqrt(toEnum n))], let j = round $ log (toEnum n) / log (toEnum i), i^j == n] ++

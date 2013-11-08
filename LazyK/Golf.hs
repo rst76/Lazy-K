@@ -61,26 +61,26 @@ hello2 = K :$ (foldl (\e c -> e :$ (numB (fromEnum c))) (m :$ h :$ endOfOutput) 
       (V "f" :$ V "f" :$ (consXY (V "y" :$ b) (V "x")))
       (V "x")
 
--- hello world that N is defined as <27> + f <73> <81>
-hello = (foldl (\e c -> e :$ (nn (fromEnum c))) (m :$ h :$ K) "!dlrow ,olleH\0")
+-- hello world that N is defined as <28> + f <80>
+hello = foldr (\c e -> e :$ (nn (fromEnum c))) (num 13 :$ h :$ K :$ K) "Hello, world!"
+-- hello = K :$ (foldr (\c e -> e :$ (nn (fromEnum c))) (m :$ h' :$ K) "\0Hello, world!")
   where
   h = delete (V "f") $ delete (V "x") $ delete (V "y") $
-    ifnonzeroNXY (V "y" :$ numB 1 :$ numB 1 :$ b)
-      (V "f" :$ V "f" :$ (consXY
-        (S :$ (S :$ numB 27 :$ S) :$ (V "y" :$ numB 73 :$ numB 81) :$ b)
-        (V "x")))
-      (K :$ V "x")
-  nn 0 = K :$ K
-  nn 32 = K :$ (K :$ numB 5)
-  nn 33 = K :$ (K :$ numB 6)
-  nn 44 = K :$ (K :$ numB 17)
-  nn 72 = K :$ (K :$ numB 45)
-  nn 100 = K
-  nn 101 = S :$ (K :$  K) :$ ss
-  nn 108 = S :$ K
-  nn 111 = K :$ (S :$ (S :$ numB 3 :$ S))
-  nn 114 = K :$ (S :$ (S :$ numB 6 :$ S))
-  nn 119 = K :$ (S :$ (S :$ numB 11 :$ S))
+    V "f" :$ consXY (S :$ (S :$ numB 28 :$ S) :$ (V "y" :$ numB 80) :$ b) (V "x")
+  h' = delete (V "f") $ delete (V "x") $ delete (V "y") $
+    ifnonzeroNXY (V "y" :$ numB 1 :$ false) (m :$ V "f") cdr :$
+      (consXY (S :$ (S :$ numB 28 :$ S) :$ (V "y" :$ numB 80) :$ b) (V "x"))
+  nn 0 = K
+  nn 32 = K :$ numB 4
+  nn 33 = K :$ numB 5
+  nn 44 = K :$ numB 16
+  nn 72 = K :$ numB 44
+  nn 100 = K :$ numB 72
+  nn 101 = K :$ numB 73
+  nn 108 = I
+  nn 111 = S :$ (S :$ numB 3 :$ S)
+  nn 114 = S :$ (S :$ numB 6 :$ S)
+  nn 119 = S :$ (S :$ numB 11 :$ S)
 
 -- permutater
 perm = S :$ (m :$ p :$ I :$ I) :$ K
