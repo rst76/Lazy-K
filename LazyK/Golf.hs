@@ -186,7 +186,7 @@ quine0S =  showU $ quine0 $ list $ map qCode0 $ init $ showU $ quine0 I
 -- code representation : 1 - 2 letters (s / ks / kk)
 -- code order : descending
 -- termination judge : length of '`' succession
-quineS = qs ++ concatMap qCode (reverse qs)
+quine1S = qs ++ concatMap qCode (reverse qs)
   where
   qCode '`' = "S"
   qCode 'K' = "KK"
@@ -208,6 +208,30 @@ quineS = qs ++ concatMap qCode (reverse qs)
         sk2bool)
   k = ss :$ (ss :$ (ss :$ (ssss1 :$ (S :$ numB 3 :$ numB 2)))) :$ b
   s = ss :$ (ss :$ (ss :$ (ss :$ ss) :$ numB 2)) :$ b
+
+-- Quine
+-- code representation : 1 - 2 letters (k / ss / sk)
+-- code order : descending
+-- termination judge : none
+quineS = reverse qs ++ concatMap qCode qs
+  where
+  qCode '`' = "K"
+  qCode 'K' = "SK"
+  qCode 'S' = "SS"
+  qs = take 512 $ reverse $ map toUpper $ showU $ replace I (S :$ K :$ K) $
+        n :$ q :$ I :$ I
+  n = S :$ numB 9 :$ numB 2 :$ b --512
+  q = (delete (V "g") $ delete (V "f") $ delete (V "k") $ delete (V "x") $
+        (delete (V "kx") $ delete (V "y") $
+          (sk2bool :$ V "x") :$
+            (V "f" :$ (b :$ consX bq :$ V "kx") :$ V "y") :$
+            (V "f" :$ (S :$ b :$ (b :$ V "kx") :$ (V "g" :$ V "y")))
+        ) :$ (b :$ V "k" :$ (V "g" :$ V "x"))
+      ) :$ g
+  g = delete (V "x") $ sk2bool :$ V "x" :$ consX k :$ consX s
+  k = ss :$ (ss :$ (ss :$ (ssss1 :$ (S :$ numB 3 :$ numB 2)))) :$ b -- 75
+  s = ss :$ (ss :$ (ss :$ ssss :$ numB 2)) :$ b -- 83
+  bq = S :$ (ss :$ (ss :$ (ss :$ (ss :$ sss)))) :$ numB 2 :$ b --96
 
 -- (\x->SSSx(SKx)K)K = true, (\x->SSSx(SKx)K)S = false
 sk2bool = delete (V "x") $ S :$ S :$ S :$ V "x" :$ (S :$ K :$ V "x") :$ K
