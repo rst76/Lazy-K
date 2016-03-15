@@ -1,6 +1,8 @@
 module LazyK.Prim where
 
 import Control.Applicative
+import qualified Data.ByteString.Lazy as B
+import System.IO
 import Text.Parsec hiding ((<|>))
 import Text.Parsec.String
 
@@ -235,6 +237,7 @@ numB 126 = ss :$ numB 125
 numB 127 = ss :$ numB 126
 numB 128 = S :$ numB 7 :$ numB 2
 numB 256 = ssi :$ numB 4
+numB n | n < 256 = ss :$ numB (n - 1)
 
 len :: Expr -> Int
 len (x :$ y) = len x + len y
@@ -277,5 +280,5 @@ reduce x = x
 run :: Expr -> IO ()
 run expr = case apply (apply (apply expr true) Succ) (Num 0) of
   Num 256 -> return ()
-  Num i -> putChar (toEnum i) >> run (apply expr false)
+  Num i -> B.hPut stdout (B.singleton $ toEnum i) >> run (apply expr false)
   x -> error ("Output should be the list of Church numerals: " ++ showC x)
