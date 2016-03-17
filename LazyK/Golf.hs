@@ -51,10 +51,10 @@ hello0 = K :$ (foldr (consXY . num' . fromEnum) (K :$ num' 256) "Hello, world!")
   num' n = S :$ (S :$ (K :$ S) :$ K) :$ num' (n - 1)
 
 -- hello world with shorter Church Numerals (by 51b)
-hello1 = K :$ (foldr (consXY . chr) endOfOutput "Hello, world!")
+hello1 = K :$ (foldr (consXY . chr) eof "Hello, world!")
 
 -- hello world with recursion
-hello2 = K :$ (foldl (\e c -> e :$ (numB (fromEnum c))) (m :$ h :$ endOfOutput) "!dlrow ,olleH\0")
+hello2 = K :$ (foldl (\e c -> e :$ (numB (fromEnum c))) (m :$ h :$ eof) "!dlrow ,olleH\0")
   where
   h = delete (V "f") $ delete (V "x") $ delete (V "y") $
     ifnonzeroNXY (V "y" :$ b)
@@ -147,8 +147,7 @@ quine0S =  showU $ quine0 $ list $ map qCode0 $ init $ showU $ quine0 I
   quine0 code = K :$ (m :$ funcExpr :$ (S :$ S :$ (m :$ codeExpr) :$ (m :$ (+++)) :$ code))
 
   funcExpr = delete (V "f") $ delete (V "x") $
-    (V "x" :$ isNil) :$
-      endOfOutput :$
+    (V "x" :$ isNil) :$ eof :$
       (consXY (expr (carX (V "x"))) (V "f" :$ V "f" :$ cdrX (V "x")))
     where 
     expr x = S :$ (S :$ numB 96 :$ S) :$ (nthNX (x :$ false :$ b) nums :$ numB 9) :$ b
@@ -181,6 +180,8 @@ quine0S =  showU $ quine0 $ list $ map qCode0 $ init $ showU $ quine0 I
   qCode0 's' = I
   qCode0 'k' = S :$ S
   qCode0 'i' = S :$ (K :$ ss) :$ ss
+
+  list = foldr consXY nil
 
 -- Quine 
 -- code representation : 1 - 2 letters (s / ks / kk)

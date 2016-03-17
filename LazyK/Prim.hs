@@ -1,9 +1,8 @@
 module LazyK.Prim where
 
-import Control.Applicative
 import qualified Data.ByteString.Lazy as B
 import System.IO
-import Text.Parsec hiding ((<|>))
+import Text.Parsec
 import Text.Parsec.String
 
 data Expr = S | K | I | Expr :$ Expr | Succ | Num Int | V String deriving (Eq, Read, Show)
@@ -69,20 +68,15 @@ true = K
 false = S :$ K
 
 consXY x y = S :$ (si :$ (K :$ x)) :$ (K :$ y)
-consX x = S :$ (K :$ (S :$ (si :$ (K :$ x)))) :$ K
-cons = S :$ (S :$ (K :$ S) :$ (S :$ (K :$ K) :$ (S :$ (K :$ S) :$ (S :$ (K :$ si) :$ K)))) :$ (K :$ K)
-
+consX x = delete (V "y") $ consXY x $ V "y"
+cons = delete (V "x") $ consX $ V "x"
 nil = K :$ true
 isNil = K :$ (K :$ false)
 carX x = x :$ true
 cdrX x = x :$ false
 car = si :$ (K :$ true)
 cdr = si :$ (K :$ false)
-nthNX n x = carX (n :$ cdr :$ x)
-listOf = m :$ (delete (V "f") $ delete (V "x") $ consXY (V "x") (V "f" :$ V "f" :$ V "x"))
-
-list :: [Expr] -> Expr
-list = foldr consXY nil
+nthNX n x = carX (n :$ cdrX x)
 
 suc = S :$ b
 pre = delete (V "n") $ V "n" :$ f :$ (K :$ num 0) :$ I
@@ -95,7 +89,7 @@ ifleMNXY m n x y = (m :$ t :$ (K :$ x)) :$ (n :$ t :$ (K :$ y))
 chr :: Char -> Expr
 chr = num . fromEnum
 
-endOfOutput = K :$ num 256
+eof = K :$ num 256
 
 num :: Int -> Expr
 num 0 = S :$ K

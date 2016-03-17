@@ -1,6 +1,5 @@
 module Main where
 
-import Control.Applicative
 import System.Environment
 import System.IO
 import LazyK.Prim
@@ -11,5 +10,5 @@ main = do
   program <- parseExpr <$> case args of
     "-e" : str : _ -> return str
     file : _ -> readFile file
-  code <- foldr (consXY . num . fromEnum) endOfOutput <$> getContents
+  code <- foldr (consXY . num . fromEnum) eof <$> getContents
   run $ reduce $ program :$ code
